@@ -754,6 +754,18 @@
 	<item>Hide Battery</item>
     </string-array>
 
+    <string-array name="pref_lockscreen_options_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_lockscreen_options_entries">
+        <item>Stock</item>
+        <item>Quad</item>
+        <item>Octo</item>
+    </string-array>
+
     <!-- **** CYANOGENMOD EDITS START **** -->
     <!-- Arrays required by Automatic Backlight. -->
     <string-array name="entries_light_filter_window">
