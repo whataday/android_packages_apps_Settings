@@ -145,9 +145,6 @@ public class Lockscreens extends Activity {
             }
         }
 
-    }
-
-    @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference == mLockscreenOption) {
                 int val = Integer.parseInt((String) newValue);
@@ -158,6 +155,10 @@ public class Lockscreens extends Activity {
             }
             return false;
         }
+
+    }
+
+    
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
