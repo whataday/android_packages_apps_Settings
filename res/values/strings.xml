@@ -695,7 +695,7 @@
     <!-- Strings for Lockscreen Settings -->
     <string name="title_pref_lockscreen_quad_targets">4-Way Lockscreen</string>
     <string name="summary_pref_lockscreen_quad_targets">Adds Phone and Messaging shortcuts on the lock screen</string>
-    <string name="title_pref_lockscreen_octo_targets">Octo Targets</string>	
+    <string name="title_pref_lockscreen_octo_targets">8-Way Lockscreen</string>	
     <string name="summary_pref_lockscreen_octo_targets">Adds too many shortcuts on the lock screen</string>
 
     <string name="sms_picker_title">Custom SMS app</string>

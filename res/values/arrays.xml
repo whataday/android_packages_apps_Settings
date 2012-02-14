@@ -762,8 +762,8 @@
 
     <string-array name="pref_lockscreen_options_entries">
         <item>Stock</item>
-        <item>Quad</item>
-        <item>Octo</item>
+        <item>4-Way</item>
+        <item>8-Way</item>
     </string-array>
 
     <!-- **** CYANOGENMOD EDITS START **** -->
