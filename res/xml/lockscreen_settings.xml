@@ -8,6 +8,11 @@
 		android:title="Lockscreen Style" />
 
 	<Preference
+		android:key="wallpaper"
+		android:title="@string/lockscreen_wallpaper_title"
+		android:summary="@string/lockscreen_wallpaper_summary" />
+
+	<Preference
 		android:key="sms_picker"
 		android:title="@string/sms_picker_title"
 		android:summary="@string/sms_picker_summary" />

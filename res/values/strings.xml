@@ -754,6 +754,8 @@
     <string name="summary_lockscreen_user_timeout_override">Use Android\'s timeout setting after you manually turn the screen off. The default behavior is to use the delay only when the screen times out by itself.</string>
     <string name="rotate_180_title">Allow 180° rotation</string>
     <string name="rotate_180_summary">Allow your device to rotate upsideown!</string>
+    <string name="lockscreen_wallpaper_title">Choose lockscreen wallpaper</string>
+    <string name="lockscreen_wallpaper_summary">You can remove the wallpaper from the menu in this window</string>
 
     <!-- Backlight #CM -->
     <string name="backlight_title">Automatic backlight</string>
