@@ -20,12 +20,19 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 
 /**
@@ -34,17 +41,19 @@ import android.widget.Button;
 public class SettingsPreferenceFragment extends PreferenceFragment implements DialogCreatable {
 
     private static final String TAG = "SettingsPreferenceFragment";
+    protected Context mContext;
 
     private SettingsDialogFragment mDialogFragment;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        mContext = getActivity().getApplicationContext();
+        super.onCreate(savedInstanceState);
     }
 
     /*
-     * The name is intentionally made different from Activity#finish(), so that
-     * users won't misunderstand its meaning.
+     * The name is intentionally made different from Activity#finish(), so that users won't
+     * misunderstand its meaning.
      */
     public final void finishFragment() {
         getActivity().onBackPressed();
@@ -109,9 +118,8 @@ public class SettingsPreferenceFragment extends PreferenceFragment implements Di
     }
 
     /**
-     * Sets the OnCancelListener of the dialog shown. This method can only be
-     * called after showDialog(int) and before removeDialog(int). The method
-     * does nothing otherwise.
+     * Sets the OnCancelListener of the dialog shown. This method can only be called after
+     * showDialog(int) and before removeDialog(int). The method does nothing otherwise.
      */
     protected void setOnCancelListener(DialogInterface.OnCancelListener listener) {
         if (mDialogFragment != null) {
@@ -120,9 +128,8 @@ public class SettingsPreferenceFragment extends PreferenceFragment implements Di
     }
 
     /**
-     * Sets the OnDismissListener of the dialog shown. This method can only be
-     * called after showDialog(int) and before removeDialog(int). The method
-     * does nothing otherwise.
+     * Sets the OnDismissListener of the dialog shown. This method can only be called after
+     * showDialog(int) and before removeDialog(int). The method does nothing otherwise.
      */
     protected void setOnDismissListener(DialogInterface.OnDismissListener listener) {
         if (mDialogFragment != null) {
@@ -220,11 +227,11 @@ public class SettingsPreferenceFragment extends PreferenceFragment implements Di
     }
 
     protected boolean hasNextButton() {
-        return ((ButtonBarHandler)getActivity()).hasNextButton();
+        return ((ButtonBarHandler) getActivity()).hasNextButton();
     }
 
     protected Button getNextButton() {
-        return ((ButtonBarHandler)getActivity()).getNextButton();
+        return ((ButtonBarHandler) getActivity()).getNextButton();
     }
 
     public void finish() {
@@ -234,9 +241,9 @@ public class SettingsPreferenceFragment extends PreferenceFragment implements Di
     public boolean startFragment(
             Fragment caller, String fragmentClass, int requestCode, Bundle extras) {
         if (getActivity() instanceof PreferenceActivity) {
-            PreferenceActivity preferenceActivity = (PreferenceActivity)getActivity();
+            PreferenceActivity preferenceActivity = (PreferenceActivity) getActivity();
             preferenceActivity.startPreferencePanel(fragmentClass, extras,
-                    R.string.lock_settings_picker_title, null, caller, requestCode);
+                    R.string.app_name, null, caller, requestCode);
             return true;
         } else {
             Log.w(TAG, "Parent isn't PreferenceActivity, thus there's no way to launch the "

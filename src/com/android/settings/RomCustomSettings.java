@@ -1,22 +1,10 @@
 package com.android.settings;
 import com.android.settings.R;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -24,29 +12,15 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.text.Spannable;
 import android.widget.EditText;
 import android.util.Log;
-import android.view.Display;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
 public class RomCustomSettings extends SettingsPreferenceFragment implements OnPreferenceChangeListener {
-
-    private static final String TAG = "Lockscreens";
-    public static final int REQUEST_PICK_WALLPAPER = 199;
-    private static final int REQUEST_PICK_SHORTCUT = 100;
-    public static final int SELECT_ACTIVITY = 2;
-    public static final int SELECT_WALLPAPER = 3;
-    private static final String WALLPAPER_NAME = "lockscreen_wallpaper.jpg";
-    Preference mLockscreenWallpaper;
 
     private static final String PREF_VOLUME_MUSIC = "volume_music_controls";
     private static final String QUAD_TARGETS = "pref_lockscreen_quad_targets";
@@ -120,8 +94,6 @@ public class RomCustomSettings extends SettingsPreferenceFragment implements OnP
         mBattBarColor.setOnPreferenceChangeListener(this);
         mBattBarColor.setEnabled(mBattBar.isChecked());
 
-	mLockscreenWallpaper = findPreference("wallpaper");
-
         mCarrier = (Preference) prefSet.findPreference(PREF_CARRIER_TEXT);
         updateCarrierText();
 
@@ -148,7 +120,6 @@ public class RomCustomSettings extends SettingsPreferenceFragment implements OnP
         } else {
             mCarrier.setSummary(mCarrierText);
         }
-	setHasOptionsMenu(true);
     }
 
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
@@ -173,32 +144,6 @@ public class RomCustomSettings extends SettingsPreferenceFragment implements OnP
             Settings.System.putInt(getActivity().getContentResolver(),
                 Settings.System.ACCELEROMETER_ROTATION_ANGLES, checked ? (1 | 2 | 4 | 8)
                     : (1 | 2 | 8));
-            return true;
-	} else if (preference == mLockscreenWallpaper) {
-
-            int width = getActivity().getWallpaperDesiredMinimumWidth();
-            int height = getActivity().getWallpaperDesiredMinimumHeight();
-            Display display = getActivity().getWindowManager().getDefaultDisplay();
-            float spotlightX = (float) display.getWidth() / width;
-            float spotlightY = (float) display.getHeight() / height;
-
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
-                    null);
-            intent.setType("image/*");
-            intent.putExtra("crop", "true");
-            intent.putExtra("aspectX", width);
-            intent.putExtra("aspectY", height);
-            intent.putExtra("outputX", width);
-            intent.putExtra("outputY", height);
-            intent.putExtra("scale", true);
-            // intent.putExtra("return-data", false);
-            intent.putExtra("spotlightX", spotlightX);
-            intent.putExtra("spotlightY", spotlightY);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, getLockscreenExternalUri());
-            intent.putExtra("outputFormat",
-                    Bitmap.CompressFormat.JPEG.toString());
-
-            startActivityForResult(intent, REQUEST_PICK_WALLPAPER);
             return true;
 	} else if (preference == mUseBLN) {
             value = mUseBLN.isChecked();
@@ -226,33 +171,6 @@ public class RomCustomSettings extends SettingsPreferenceFragment implements OnP
         }
 
         return false;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.lockscreens, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.remove_wallpaper:
-                File f = new File(mContext.getFilesDir(), WALLPAPER_NAME);
-                Log.e(TAG, mContext.deleteFile(WALLPAPER_NAME) + "");
-                Log.e(TAG, mContext.deleteFile(WALLPAPER_NAME) + "");
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-
-    private Uri getLockscreenExternalUri() {
-        File dir = mContext.getExternalCacheDir();
-        File wallpaper = new File(dir, WALLPAPER_NAME);
-
-        return Uri.fromFile(wallpaper);
     }
 
     @Override
@@ -284,44 +202,5 @@ public class RomCustomSettings extends SettingsPreferenceFragment implements OnP
         return false;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_PICK_WALLPAPER) {
-
-                FileOutputStream wallpaperStream = null;
-                try {
-                    wallpaperStream = mContext.openFileOutput(WALLPAPER_NAME,
-                            Context.MODE_PRIVATE);
-                } catch (FileNotFoundException e) {
-                    return; // NOOOOO
-                }
-
-                // should use intent.getData() here but it keeps returning null
-                Uri selectedImageUri = getLockscreenExternalUri();
-                Log.e(TAG, "Selected image uri: " + selectedImageUri);
-                Bitmap bitmap = BitmapFactory.decodeFile(selectedImageUri.getPath());
-
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100,
-                        wallpaperStream);
-
-            } else if (requestCode == REQUEST_PICK_SHORTCUT) {
-                mPicker.onActivityResult(requestCode, resultCode, data);
-            }
-        }
-    }
-
-    public void copy(File src, File dst) throws IOException {
-        InputStream in = new FileInputStream(src);
-        FileOutputStream out = new FileOutputStream(dst);
-
-        // Transfer bytes from in to out
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
-    }
 }
 
